@@ -16,6 +16,7 @@ const Home = () => {
             display: "flex",
             justifyContent: "center",
             pt: "50px",
+            pb:'100px'
           }}
         >
           {user && user.email ? (

@@ -23,6 +23,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alertPopup, setAlertPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -40,15 +41,20 @@ const SignUp = () => {
       setAlertPopup(true);
       return;
     }
+    setLoading(true);
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/user/register`, {
-        name,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_API_URL}/user/register`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
       if (res.status === 200) {
         setError(res.data?.message || "User already exist!");
         setAlertPopup(true);
+        setLoading(false);
       }
       if (res.data.email) {
         setError("");
@@ -63,6 +69,7 @@ const SignUp = () => {
       setError("Something went wrong!");
       setAlertPopup(true);
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -171,8 +178,9 @@ const SignUp = () => {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: "10px" }}
+                  disabled={loading}
                 >
-                  Sign Up
+                  {loading ? "Signing Up" : "Sign Up"}
                 </Button>
                 <Box>
                   <Box component="p" sx={{ textAlign: "center" }}>

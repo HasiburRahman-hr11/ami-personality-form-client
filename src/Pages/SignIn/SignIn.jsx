@@ -25,6 +25,7 @@ const SignIn = () => {
   const [alertPopup, setAlertPopup] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
@@ -36,6 +37,7 @@ const SignIn = () => {
       setAlertPopup(true);
       return;
     }
+    setLoading(true);
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/user/login`, {
@@ -46,6 +48,7 @@ const SignIn = () => {
       if (res.status === 200) {
         setError(res.data?.message || "Invalid Credentials!");
         setAlertPopup(true);
+      
       }
       if (res.data.token) {
         setResponseMessage("Logged in successfully.");
@@ -55,7 +58,7 @@ const SignIn = () => {
         const decodedToken = jwtDecode(res.data.token);
         const userData = decodedToken;
         setUser(userData);
-
+        setLoading(false);
         // Clear The Form.
         setError("");
         setEmail("");
@@ -72,6 +75,7 @@ const SignIn = () => {
       setError("Something went wrong!");
       setAlertPopup(true);
       console.error(error);
+      setLoading(false);
     }
   };
   return (
@@ -168,8 +172,9 @@ const SignIn = () => {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: "10px" }}
+                  disabled={loading}
                 >
-                  Sign In
+                  {loading ? "Signing In" : "Sign In"}
                 </Button>
                 <Box>
                   <Box component="p" sx={{ textAlign: "center" }}>
