@@ -6,6 +6,7 @@ import SignUp from "./Pages/SignUp/SignUp";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./Pages/NotFound/NotFound";
+import FormResult from "./Pages/FormResult/FormResult";
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/result/form-data" element={<FormResult />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
        

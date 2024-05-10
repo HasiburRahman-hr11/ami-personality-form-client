@@ -28,3 +28,10 @@ a{
     transform: translateX(0rem);
   }
 }
+
+@media print {
+  /* Hide elements not meant for printing */
+  .no-print {
+    display: none !important;
+  }
+}

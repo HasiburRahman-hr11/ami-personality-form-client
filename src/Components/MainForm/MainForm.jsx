@@ -1,6 +1,7 @@
 import { Box, Button, Slider, TextField, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom'
 
 const MainForm = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,7 @@ const MainForm = () => {
   const [ansThree, setAnsThree] = useState(1);
   const [ansFour, setAnsFour] = useState(1);
   const [ansFive, setAnsFive] = useState(1);
+  const navigate = useNavigate()
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleNameChange = (e) => {
@@ -88,6 +90,8 @@ const MainForm = () => {
         );
         if (res.data) {
           setFormSubResult(res.data);
+          localStorage.setItem('formData', JSON.stringify(res.data));
+          navigate('/result/form-data');
         }
         console.log(res);
         setName("");
@@ -314,69 +318,7 @@ const MainForm = () => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: "70px", width: "500px", mx: "auto" }}>
-        <Typography
-          sx={{
-            textAlign: "center",
-            fontWeight: "500",
-            fontSize: "30px",
-            mb: "30px",
-          }}
-        >
-          Form Submission Result Will Show Here: -
-        </Typography>
-        {formSubResult && formSubResult?.name && (
-          <Box>
-            <iframe
-              id="ifmcontentstoprint"
-              style={{height:'0', width:'0', position:'absolute'}}
-              title="Print Content"
-            ></iframe>
-            <Typography>Name: {formSubResult.name}</Typography>
-            <Typography>Email: {formSubResult.email}</Typography>
-            <Box>
-              <Typography sx={{ textAlign: "center", mt: "20px" }}>
-                Answers:{" "}
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  mt: "20px",
-                }}
-                id="printableContent"
-                ref={printableContentRef}
-              >
-                {formSubResult.answers.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      width: "18%",
-                      height: "100px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "#f1f1f1",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <Typography sx={{ fontSize: "25px", fontWeight: "500" }}>
-                      {item}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-              <Box
-                sx={{ display: "flex", justifyContent: "center", mt: "20px" }}
-              >
-                <Button variant="contained" onClick={handlePrint}>
-                  Print Answers
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        )}
-      </Box>
+      
     </Box>
   );
 };
