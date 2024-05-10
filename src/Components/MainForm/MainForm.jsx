@@ -1,15 +1,14 @@
 import { Box, Button, Slider, TextField, Typography } from "@mui/material";
-import React, { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 
 const MainForm = () => {
-  const { user } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [formSubResult, setFormSubResult] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [ansOne, setAnsOne] = useState(1);
   const [ansTwo, setAnsTwo] = useState(1);
@@ -80,28 +79,28 @@ const MainForm = () => {
         name,
         email,
         answers: [answerOne, answerTwo, answerThree, answerFour, answerFive],
-        userId: user?.userId,
       };
+      setLoading(true);
       try {
-        if (user?.userId) {
-          const res = await axios.post(
-            "http://localhost:8000/form-submission/add",
-            formData
-          );
-          if (res.data) {
-            setFormSubResult(res.data);
-          }
-          console.log(res);
-          //   setName("");
-          //   setEmail("");
-          //   setAnsOne(1);
-          //   setAnsTwo(1);
-          //   setAnsThree(1);
-          //   setAnsFour(1);
-          //   setAnsFive(1);
+        const res = await axios.post(
+          `${process.env.REACT_APP_BASE_API_URL}/form-submission/add`,
+          formData
+        );
+        if (res.data) {
+          setFormSubResult(res.data);
         }
+        console.log(res);
+        setName("");
+        setEmail("");
+        setAnsOne(1);
+        setAnsTwo(1);
+        setAnsThree(1);
+        setAnsFour(1);
+        setAnsFive(1);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
 
       //   console.log(formData);
@@ -110,17 +109,27 @@ const MainForm = () => {
 
   const printableContentRef = useRef(null);
 
-  const handlePrint = () => {
-    const printContent = printableContentRef.current.innerHTML;
-    const originalContents = document.body.innerHTML;
+  const handlePrint = (e) => {
+    e.preventDefault();
+    console.log("Clicking");
+    // const printContent = printableContentRef.current.innerHTML;
+    // const originalContents = document.body.innerHTML;
+    // console.log(printContent)
 
-    document.body.innerHTML = printContent;
-    window.print();
+    // document.body.innerHTML = printContent;
+    // window.print();
 
-    // Restore original content asynchronously to ensure it happens after print dialog is closed
-    setTimeout(() => {
-      document.body.innerHTML = originalContents;
-    }, 100);
+    // // Restore original content asynchronously to ensure it happens after print dialog is closed
+    // setTimeout(() => {
+    //   document.body.innerHTML = originalContents;
+    // }, 100);
+    var content = document.getElementById("printableContent");
+    var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+    pri.document.open();
+    pri.document.write(content.innerHTML);
+    pri.document.close();
+    pri.focus();
+    pri.print();
   };
   return (
     <Box
@@ -294,8 +303,13 @@ const MainForm = () => {
             />
           </Box>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Button variant="contained" onClick={handleSubmit}>
-              Submit
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{ minWidth: "130px" }}
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit"}
             </Button>
           </Box>
         </Box>
@@ -313,6 +327,11 @@ const MainForm = () => {
         </Typography>
         {formSubResult && formSubResult?.name && (
           <Box>
+            <iframe
+              id="ifmcontentstoprint"
+              style={{height:'0', width:'0', position:'absolute'}}
+              title="Print Content"
+            ></iframe>
             <Typography>Name: {formSubResult.name}</Typography>
             <Typography>Email: {formSubResult.email}</Typography>
             <Box>

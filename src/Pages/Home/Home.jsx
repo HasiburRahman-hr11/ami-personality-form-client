@@ -1,12 +1,9 @@
-import React, { useContext } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
-import { Box, Container, Typography } from "@mui/material";
-import { AuthContext } from "../../Context/AuthContext";
+import { Box, Container } from "@mui/material";
 import MainForm from "../../Components/MainForm/MainForm";
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
-  console.log(user);
+
   return (
     <>
       <Navbar />
@@ -16,24 +13,10 @@ const Home = () => {
             display: "flex",
             justifyContent: "center",
             pt: "50px",
-            pb:'100px'
+            pb: "100px",
           }}
         >
-          {user && user.email ? (
-            <MainForm />
-          ) : (
-            <Box>
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  fontWeight: "500",
-                  fontSize: "30px",
-                }}
-              >
-                Login to Submit The Form
-              </Typography>
-            </Box>
-          )}
+          <MainForm />
         </Box>
       </Container>
     </>

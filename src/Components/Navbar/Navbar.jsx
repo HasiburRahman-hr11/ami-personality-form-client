@@ -70,7 +70,7 @@ const Navbar = () => {
                 </Link>
               )}
             </Box>
-            <Box component="li">
+            {/* <Box component="li">
               {user?.email ? (
                 <Button
                   sx={{
@@ -114,7 +114,7 @@ const Navbar = () => {
                   </Typography>
                 </Link>
               )}
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </Box>
